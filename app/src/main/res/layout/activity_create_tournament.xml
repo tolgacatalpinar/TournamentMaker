@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".CreateTournamentActivity">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/kullancilarRl"
+        >
+
+
+        <TextView
+            android:id="@+id/kullancilarText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="28dp"
+            android:layout_marginTop="30dp"
+            android:text="Kullanicilar" />
+
+    </RelativeLayout>
+
+    <Button
+        android:id="@+id/addCapoeiristaButton"
+        android:layout_width="147dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:text="Capoeirista Ekle"
+        app:layout_constraintBottom_toTopOf="@+id/matchButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/matchButton"
+        android:layout_width="146dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="48dp"
+        android:text="Eşleştir"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <EditText
+        android:id="@+id/capoeiristaNameText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:text="Enter Capoeirista Name"
+        app:layout_constraintBottom_toTopOf="@+id/addCapoeiristaButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.503"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.424" />
+
+    <Button
+        android:id="@+id/dismissButton"
+        android:layout_width="108dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="X"
+        app:layout_constraintStart_toStartOf="@+id/capoeiristaNameText"
+        app:layout_constraintTop_toBottomOf="@+id/capoeiristaNameText" />
+
+    <Button
+        android:id="@+id/addButton"
+        android:layout_width="97dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:text="EKLE"
+        app:layout_constraintStart_toEndOf="@+id/dismissButton"
+        app:layout_constraintTop_toBottomOf="@+id/capoeiristaNameText" />
+
+</android.support.constraint.ConstraintLayout>
