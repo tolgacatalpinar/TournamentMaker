@@ -2,6 +2,7 @@ package com.example.tolga.capoeirabatizado;
 
 import android.app.ActionBar;
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -16,6 +17,7 @@ import android.widget.TextView;
 import org.w3c.dom.Text;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class CreateTournamentActivity extends AppCompatActivity {
 
@@ -26,7 +28,8 @@ public class CreateTournamentActivity extends AppCompatActivity {
     private Button matchBut;
     private RelativeLayout kullanicilarRl;
     private Context context;
-    private ArrayList<Capoeirista> capoeiristas;
+    private ArrayList<String> capoeiristas;
+    private final String MESSAGE_KEY = "KEY";
 
 
     @Override
@@ -85,7 +88,7 @@ public class CreateTournamentActivity extends AppCompatActivity {
                 Log.d( "count: " + kullanicilarRl.getChildCount(), "652");
 
                 String capoeiristaName = editCapoeiristaName.getText().toString();
-                capoeiristas.add( new Capoeirista(capoeiristaName));
+                capoeiristas.add( capoeiristaName);
                 TextView tv = new TextView( context);
                 params.setMargins(50,30,0,0);
                 tv.setId(kullanicilarRl.getChildCount());
@@ -104,6 +107,9 @@ public class CreateTournamentActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
+                Intent intent = new Intent(getApplication(), Tournament.class);
+                intent.putExtra(MESSAGE_KEY, capoeiristas);
+                startActivity(intent);
             }
         });
     }

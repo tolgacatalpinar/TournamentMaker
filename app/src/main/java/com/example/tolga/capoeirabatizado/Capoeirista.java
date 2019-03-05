@@ -1,6 +1,8 @@
 package com.example.tolga.capoeirabatizado;
 
-public class Capoeirista {
+import android.os.Parcelable;
+
+public class Capoeirista{
 
     String name;
     int numberOfMatches;
@@ -30,4 +32,23 @@ public class Capoeirista {
         numberOfTies ++;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public int getNumberOfMatches() {
+        return numberOfMatches;
+    }
+
+    public int getNumberOfWins() {
+        return numberOfWins;
+    }
+
+    public int getNumberOfLoses() {
+        return numberOfLoses;
+    }
+
+    public int getNumberOfTies() {
+        return numberOfTies;
+    }
 }
