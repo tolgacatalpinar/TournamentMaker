@@ -95,6 +95,7 @@ public class CreateTournamentActivity extends AppCompatActivity {
 
                 tv.setText(capoeiristaName);
                 kullanicilarRl.addView( tv, params);
+                editCapoeiristaName.setText("");
 
 //                kullanicilarRl.addView( temp);
 //                editCapoeiristaName.setText("");

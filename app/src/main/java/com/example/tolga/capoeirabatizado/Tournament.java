@@ -10,6 +10,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -22,7 +23,7 @@ public class Tournament extends AppCompatActivity {
 
     private final String MESSAGE_KEY = "KEY";
     private ArrayList<Capoeirista> capoeiristas = new ArrayList<>();
-    private RelativeLayout allRoundsRl;
+    private LinearLayout allRoundsLl;
     private RelativeLayout rl;
     private Context context;
     private int numberOfRounds;
@@ -30,7 +31,7 @@ public class Tournament extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tournament);
-        allRoundsRl = findViewById(R.id.allRoundsRl);
+        allRoundsLl = findViewById(R.id.allRoundsLl);
 
         context = this;
 
@@ -58,36 +59,52 @@ public class Tournament extends AppCompatActivity {
         }
 
         // Show every match in relative layout as the first round
-        for( int i = 0; i < capoeiristas.size(); i ++)
+//        LinearLayout roundLinear = new LinearLayout( this);
+//        roundLinear.setOrientation( LinearLayout.VERTICAL);
+//
+//        TextView roundNumber = new TextView( this);
+//        roundNumber.setId( roundLinear.getChildCount());
+//        roundNumber.setText( "1. Tur");
+//
+//        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
+//        params.setMargins( 50, 30, 0, 0);
+//        roundNumber.setLayoutParams( params);
+//        roundLinear.addView( roundNumber);
+//
+//
+//        for( int i = 0; i < capoeiristas.size(); i ++)
+//        {
+//
+//            TextView tv = new TextView( this);
+//            tv.setId(roundLinear.getChildCount());
+//            tv.setText( capoeiristas.get(i).getName());
+//            roundLinear.addView( tv, params);
+//
+//        }
+//        allRoundsLl.addView( roundLinear, params);
+
+        LinearLayout roundLinear = new LinearLayout( this);
+        roundLinear.setOrientation( LinearLayout.VERTICAL);
+        addTextViewIntoLinearLayout( roundLinear, "1.Tur");
+        addTextViewIntoLinearLayout( roundLinear, "-----");
+
+        for( int i = 0; i < capoeiristas.size() - 1; i += 2)
         {
-            rl = new RelativeLayout(this);
-            RelativeLayout.LayoutParams relativeParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT / numberOfRounds);
-            relativeParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
-            allRoundsRl.addView( rl);
+            RelativeLayout rl = new RelativeLayout( this);
+            rl.setId( allRoundsLl.getChildCount());
+            TextView firstCapoeirista = new TextView( this);
+            firstCapoeirista.setText( capoeiristas.get(i).getName());
+            firstCapoeirista.setId( rl.getChildCount());
+            RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
+            params.setMargins( 50, 30, 0, 0);
+            rl.addView(firstCapoeirista);
 
-            // devam et burdan..
-
-            View capoeiristaView = rl.getChildAt( i + 1);
-            RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-            params.addRule( RelativeLayout.BELOW, capoeiristaView.getId());
-
-            // Header
-            if( i == 0)
-            {
-                TextView header = new TextView( context);
-                header.setText(i + ". Tur");
-                rl.addView( header, params);
-            }
-
-
-            TextView tv = new TextView( context);
-            tv.setId( i);
-            params.setMargins(50,30,0,0);
-            tv.setText(capoeiristas.get(i).getName());
-            rl.addView( tv, params);
-            allRoundsRl.addView( rl);
-
+            addTextViewIntoRelativeLayout( rl, capoeiristas.get(i + 1).getName(), rl.getChildAt(rl.getChildCount() - 1));
+            addViewIntoLinearLayout( roundLinear, rl);
+            addTextViewIntoLinearLayout( roundLinear, "");
         }
+        addViewIntoLinearLayout( allRoundsLl, roundLinear);
+
     }
     public int calculateNumberOfRounds( int size)
     {
@@ -103,6 +120,32 @@ public class Tournament extends AppCompatActivity {
             else
                 return (size / 2) + calculateNumberOfRounds( size / 2);
         }
+    }
+
+    public void addTextViewIntoLinearLayout( LinearLayout layout, String text)
+    {
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams( LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
+        params.setMargins( 50, 30, 0, 0);
+        TextView tv = new TextView( this);
+        tv.setId(layout.getChildCount());
+        tv.setText( text);
+        layout.addView( tv, params);
+    }
+    public void addTextViewIntoRelativeLayout( RelativeLayout rl, String text, View lastView)
+    {
+        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
+        params.addRule( RelativeLayout.BELOW, lastView.getId());
+        TextView tv = new TextView( this);
+        tv.setId(rl.getChildCount());
+        tv.setText( text);
+        rl.addView(tv, params);
+//        params.setMargins( 50, 30, 0, 0);
+    }
+    public void addViewIntoLinearLayout( LinearLayout layout, View view)
+    {
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams( LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
+        params.setMargins( 50, 30, 0, 0);
+        layout.addView( view, params);
     }
 
 }
