@@ -138,9 +138,12 @@ public class Tournament extends AppCompatActivity {
                 roundsAsStrings.add("-----");
             }
         }
+        roundsAsStrings.add("Kazanan");
+        roundsAsStrings.add("-------");
         // capoeiristaların isimlerini textview a çevir
         final ArrayList<TextView> capoeiristasOfCurrentRound = new ArrayList<TextView>();
         final ArrayList<Capoeirista> tempCapoeiristas = new ArrayList<>();
+        final ArrayList<Capoeirista> loserCapoeiristas = new ArrayList<>();
         for( int i = 0; i < capoeiristas.size(); i++) {
             tempCapoeiristas.add(new Capoeirista(capoeiristas.get(i).getName()));
         }
@@ -150,9 +153,16 @@ public class Tournament extends AppCompatActivity {
             view.setText(i + 1 + "- " + capoeiristas.get(i).getName());
             capoeiristasOfCurrentRound.add( view);
         }
+        // Tek sayılı capoeirista için
+        if( capoeiristas.size() % 2 == 1)
+        {
+            TextView view = new TextView( context);
+            view.setText( capoeiristas.size() + 1 + "- ");
+            capoeiristasOfCurrentRound.add( view);
+        }
         // Capoeiristaları ikili olarak eşleştirip arraylistte depola
         pairLayout = new ArrayList<>();
-        for( int i = 0; i < tempCapoeiristas.size() - 1; i += 2)
+        for( int i = 0; i < capoeiristasOfCurrentRound.size() - 1; i += 2)
         {
             LinearLayout temp = new LinearLayout( context);
             temp.setOrientation(LinearLayout.VERTICAL);
@@ -219,10 +229,15 @@ public class Tournament extends AppCompatActivity {
                                 capoeiristasOfCurrentRound.get( index + 1).setBackgroundColor( RED);
                                 String firstCapo = tempCapoeiristas.get(index).getName();
                                 String secondCapo = tempCapoeiristas.get(index + 1).getName();
-                                if( doesExist( capoeiristas, secondCapo))
+                                if( doesExist( capoeiristas, secondCapo)) {
                                     removeCapoeirista(capoeiristas, secondCapo);
-                                if( !doesExist( capoeiristas, firstCapo))
-                                    addCapoeirista( capoeiristas, firstCapo);
+                                }
+                                if( !doesExist( capoeiristas, firstCapo)) {
+                                    addCapoeirista(capoeiristas, firstCapo);
+                                }
+                                if( !doesExist( loserCapoeiristas, secondCapo)) {
+                                    addCapoeirista(loserCapoeiristas, secondCapo);
+                                }
                             }
                             else
                             {
@@ -234,8 +249,18 @@ public class Tournament extends AppCompatActivity {
                                     removeCapoeirista(capoeiristas, firstCapo);
                                 if( !doesExist( capoeiristas, secondCapo))
                                     addCapoeirista( capoeiristas, secondCapo);
+                                if( !doesExist( loserCapoeiristas, firstCapo)) {
+                                    addCapoeirista(loserCapoeiristas, firstCapo);
+                                }
                             }
                             numberOfClickedPair ++;
+                            if( tempCapoeiristas.size() % 2 == 1 && numberOfClickedPair == pairLayout.size() - 1)
+                            {
+                                Collections.shuffle( loserCapoeiristas);
+                                String name = loserCapoeiristas.get( 0).getName();
+                                capoeiristasOfCurrentRound.get( capoeiristasOfCurrentRound.size() - 1).setText( tempCapoeiristas.size() + 1 + "- " + name);
+                                tempCapoeiristas.add( new Capoeirista( name));
+                            }
                             if( numberOfClickedPair == pairLayout.size())
                             {
                                 matchingButton.setVisibility( View.VISIBLE);
@@ -277,6 +302,7 @@ public class Tournament extends AppCompatActivity {
 
                 final ArrayList<TextView> capoeiristasOfCurrentRound = new ArrayList<TextView>();
                 Collections.shuffle( capoeiristas);
+                final ArrayList<Capoeirista> loserCapoeiristas = new ArrayList<>();
                 final ArrayList<Capoeirista> tempCapoeiristas = new ArrayList<>();
                 for( int i = 0; i < capoeiristas.size(); i++) {
                     tempCapoeiristas.add(new Capoeirista(capoeiristas.get(i).getName()));
@@ -287,9 +313,15 @@ public class Tournament extends AppCompatActivity {
                     view.setText(i + 1 + "- " + capoeiristas.get(i).getName());
                     capoeiristasOfCurrentRound.add( view);
                 }
-
+                // Tek sayılı capoeirista için
+                if( capoeiristas.size() % 2 == 1)
+                {
+                    TextView view = new TextView( context);
+                    view.setText( capoeiristas.size() + 1 + "- ");
+                    capoeiristasOfCurrentRound.add( view);
+                }
                 pairLayout = new ArrayList<>();
-                for( int i = 0; i < capoeiristas.size() - 1; i += 2)
+                for( int i = 0; i < capoeiristasOfCurrentRound.size() - 1; i += 2)
                 {
                     LinearLayout temp = new LinearLayout( context);
                     temp.setOrientation(LinearLayout.VERTICAL);
@@ -362,6 +394,9 @@ public class Tournament extends AppCompatActivity {
                                                 removeCapoeirista(capoeiristas, secondCapo);
                                             if( !doesExist( capoeiristas, firstCapo))
                                                 addCapoeirista( capoeiristas, firstCapo);
+                                            if( !doesExist( loserCapoeiristas, secondCapo)) {
+                                                addCapoeirista(loserCapoeiristas, secondCapo);
+                                            }
                                         }
                                         else
                                         {
@@ -373,11 +408,58 @@ public class Tournament extends AppCompatActivity {
                                                 removeCapoeirista(capoeiristas, firstCapo);
                                             if( !doesExist( capoeiristas, secondCapo))
                                                 addCapoeirista( capoeiristas, secondCapo);
+                                            if( !doesExist( loserCapoeiristas, firstCapo)) {
+                                                addCapoeirista(loserCapoeiristas, firstCapo);
+                                            }
                                         }
                                         numberOfClickedPair ++;
+                                        if( tempCapoeiristas.size() % 2 == 1 && numberOfClickedPair == pairLayout.size() - 1)
+                                        {
+                                            Collections.shuffle( loserCapoeiristas);
+                                            String name = loserCapoeiristas.get( 0).getName();
+                                            capoeiristasOfCurrentRound.get( capoeiristasOfCurrentRound.size() - 1).setText( tempCapoeiristas.size() + 1 + "- " + name);
+                                            tempCapoeiristas.add( new Capoeirista( name));
+                                        }
                                         if( numberOfClickedPair == pairLayout.size())
                                         {
-                                            matchingButton.setVisibility( View.VISIBLE);
+                                            System.out.println( currentRound + " and " + numberOfRounds);
+                                            if( currentRound + 1 != numberOfRounds)
+                                            {
+                                                matchingButton.setVisibility( View.VISIBLE);
+                                            }
+                                            // KAZANANI GÖSTERMEK İÇİN...
+                                            else
+                                            {
+                                                LinearLayout winnerLayout = new LinearLayout( context);
+                                                winnerLayout.setOrientation(LinearLayout.VERTICAL);
+
+                                                TextView view1 = new TextView( context);
+                                                TextView view2 = new TextView( context);
+                                                view1.setText(roundsAsStrings.get(roundsAsStrings.size() - 2));
+                                                view2.setText(roundsAsStrings.get(roundsAsStrings.size() - 1));
+                                                ViewGroup parent = (ViewGroup) view1.getParent();
+                                                ViewGroup parent2 = (ViewGroup) view2.getParent();
+                                                if( parent != null)
+                                                    parent.removeView(view1);
+                                                if( parent2 != null)
+                                                    parent.removeView(view2);
+                                                winnerLayout.addView( view1, params);
+                                                winnerLayout.addView( view2, params);
+                                                if( controlSelectOfWinner == 1)
+                                                {
+                                                    TextView view = new TextView(context);
+                                                    view.setText( tempCapoeiristas.get( index).getName());
+
+                                                    winnerLayout.addView(view, params);
+                                                }
+                                                else
+                                                {
+                                                    TextView view = new TextView(context);
+                                                    view.setText( tempCapoeiristas.get( index + 1).getName());
+                                                    winnerLayout.addView(view, params);
+                                                }
+                                                allRoundsLl.addView( winnerLayout, params);
+                                            }
                                         }
                                     }
                                 });
