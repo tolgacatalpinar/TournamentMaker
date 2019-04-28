@@ -11,6 +11,7 @@ package com.example.tolga.capoeirabatizado;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -31,7 +32,9 @@ import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collections;
 
+import static android.graphics.Color.GRAY;
 import static android.graphics.Color.GREEN;
+import static android.graphics.Color.RED;
 
 public class Tournament extends AppCompatActivity {
 
@@ -43,13 +46,18 @@ public class Tournament extends AppCompatActivity {
     private final String MESSAGE_KEY = "KEY";
     private ArrayList<Capoeirista> capoeiristas = new ArrayList<>();
     private LinearLayout allRoundsLl;
-    private RelativeLayout rl;
+    private Button cancelButton;
+    private Button chooseButton;
+    private TextView firstCapoeiristaText;
+    private TextView secondCapoeiristaText;
+    private TextView infoText;
     private Context context;
     private int numberOfRounds;
     private int currentRound;
     private int titleNumber;
     private int numberOfClickedPair;
     private Button matchingButton;
+    private int controlSelectOfWinner = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,8 +66,19 @@ public class Tournament extends AppCompatActivity {
         allRoundsLl = findViewById(R.id.allRoundsLl);
         matchingButton = findViewById(R.id.matchingButton);
         matchingButton.setVisibility( View.INVISIBLE);
-
         context = this;
+
+        cancelButton = findViewById(R.id.cancelButton);
+        chooseButton = findViewById(R.id.chooseButton);
+        firstCapoeiristaText = findViewById(R.id.firstCapoeiristaText);
+        secondCapoeiristaText = findViewById(R.id.secondCapoeiristaText);
+        infoText = findViewById(R.id.infoText);
+        cancelButton.setVisibility(View.INVISIBLE);
+        chooseButton.setVisibility(View.INVISIBLE);
+        firstCapoeiristaText.setVisibility(View.INVISIBLE);
+        secondCapoeiristaText.setVisibility(View.INVISIBLE);
+        infoText.setVisibility(View.INVISIBLE);
+
 
         Intent intent = getIntent();
         ArrayList<String> list = intent.getStringArrayListExtra( MESSAGE_KEY);
@@ -92,19 +111,21 @@ public class Tournament extends AppCompatActivity {
 
 
 
-        params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        params = new LinearLayout.LayoutParams(400, LinearLayout.LayoutParams.WRAP_CONTENT);
         params2 = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
 
         params.setMargins(50,20,0,0);
         params2.setMargins(50,20,0,50);
 
         // Turların string sayılarını arraylistte depola
+        // Tur isimleri, altındaki textview'ların width ini belirliyo. O yüzden küçük genişlikteki tur başlığı, capoeirista ismini kısıtlıyo.
+        // Aynı zamanda toplam tur sayısı da ekranın tamamını kaplayan linear layout un hücrelerinin genişliğini etkiliyor.
         roundsAsStrings = new ArrayList<>();
         for( int i = 0; i < numberOfRounds; i ++)
         {
             if( numberOfRounds - i > 2) {
                 roundsAsStrings.add(i + 1 + ". Tur");
-                roundsAsStrings.add("-----");
+                roundsAsStrings.add("--------");
             }
             else if( numberOfRounds - i == 2)
             {
@@ -118,7 +139,11 @@ public class Tournament extends AppCompatActivity {
             }
         }
         // capoeiristaların isimlerini textview a çevir
-        ArrayList<TextView> capoeiristasOfCurrentRound = new ArrayList<TextView>();
+        final ArrayList<TextView> capoeiristasOfCurrentRound = new ArrayList<TextView>();
+        final ArrayList<Capoeirista> tempCapoeiristas = new ArrayList<>();
+        for( int i = 0; i < capoeiristas.size(); i++) {
+            tempCapoeiristas.add(new Capoeirista(capoeiristas.get(i).getName()));
+        }
         for( int i = 0; i < capoeiristas.size(); i ++)
         {
             TextView view = new TextView( context);
@@ -127,7 +152,7 @@ public class Tournament extends AppCompatActivity {
         }
         // Capoeiristaları ikili olarak eşleştirip arraylistte depola
         pairLayout = new ArrayList<>();
-        for( int i = 0; i < capoeiristas.size() - 1; i += 2)
+        for( int i = 0; i < tempCapoeiristas.size() - 1; i += 2)
         {
             LinearLayout temp = new LinearLayout( context);
             temp.setOrientation(LinearLayout.VERTICAL);
@@ -140,20 +165,88 @@ public class Tournament extends AppCompatActivity {
                 parent.removeView(capoeiristasOfCurrentRound.get( i + 1));
             temp.addView( capoeiristasOfCurrentRound.get( i), params);
             temp.addView( capoeiristasOfCurrentRound.get( i + 1), params2);
+            final int index = i;
             temp.setOnTouchListener(new View.OnTouchListener() {
                 @Override
                 public boolean onTouch(View v, MotionEvent event) {
                     // Bug var, birden çok tıklanırsa???
                     //if( event.getAction() == MotionEvent.)
-                    numberOfClickedPair ++;
-                    v.setBackgroundColor(GREEN);
-                    if( numberOfClickedPair == pairLayout.size())
-                    {
-                        matchingButton.setVisibility( View.VISIBLE);
-                    }
+                    cancelButton.setVisibility(View.VISIBLE);
+                    chooseButton.setVisibility(View.VISIBLE);
+                    firstCapoeiristaText.setVisibility(View.VISIBLE);
+                    secondCapoeiristaText.setVisibility(View.VISIBLE);
+                    infoText.setVisibility(View.VISIBLE);
+                    firstCapoeiristaText.setText( capoeiristasOfCurrentRound.get(index).getText());
+                    secondCapoeiristaText.setText( capoeiristasOfCurrentRound.get( index + 1).getText());
+
+                    firstCapoeiristaText.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            capoeiristasOfCurrentRound.get( index).setBackgroundColor( GREEN);
+                            capoeiristasOfCurrentRound.get( index + 1).setBackgroundColor( RED);
+                            controlSelectOfWinner = 1;
+                        }
+                    });
+                    secondCapoeiristaText.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            capoeiristasOfCurrentRound.get( index).setBackgroundColor( RED);
+                            capoeiristasOfCurrentRound.get( index + 1).setBackgroundColor( GREEN);
+                            controlSelectOfWinner = 2;
+                        }
+                    });
+                    cancelButton.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            cancelButton.setVisibility(View.INVISIBLE);
+                            chooseButton.setVisibility(View.INVISIBLE);
+                            firstCapoeiristaText.setVisibility(View.INVISIBLE);
+                            secondCapoeiristaText.setVisibility(View.INVISIBLE);
+                            infoText.setVisibility(View.INVISIBLE);
+                        }
+                    });
+                    chooseButton.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            cancelButton.setVisibility(View.INVISIBLE);
+                            chooseButton.setVisibility(View.INVISIBLE);
+                            firstCapoeiristaText.setVisibility(View.INVISIBLE);
+                            secondCapoeiristaText.setVisibility(View.INVISIBLE);
+                            infoText.setVisibility(View.INVISIBLE);
+                            if( controlSelectOfWinner == 1)
+                            {
+                                capoeiristasOfCurrentRound.get( index).setBackgroundColor( GREEN);
+                                capoeiristasOfCurrentRound.get( index + 1).setBackgroundColor( RED);
+                                String firstCapo = tempCapoeiristas.get(index).getName();
+                                String secondCapo = tempCapoeiristas.get(index + 1).getName();
+                                if( doesExist( capoeiristas, secondCapo))
+                                    removeCapoeirista(capoeiristas, secondCapo);
+                                if( !doesExist( capoeiristas, firstCapo))
+                                    addCapoeirista( capoeiristas, firstCapo);
+                            }
+                            else
+                            {
+                                capoeiristasOfCurrentRound.get( index).setBackgroundColor( RED);
+                                capoeiristasOfCurrentRound.get( index + 1).setBackgroundColor( GREEN);
+                                String firstCapo = tempCapoeiristas.get(index).getName();
+                                String secondCapo = tempCapoeiristas.get(index + 1).getName();
+                                if( doesExist( capoeiristas, firstCapo))
+                                    removeCapoeirista(capoeiristas, firstCapo);
+                                if( !doesExist( capoeiristas, secondCapo))
+                                    addCapoeirista( capoeiristas, secondCapo);
+                            }
+                            numberOfClickedPair ++;
+                            if( numberOfClickedPair == pairLayout.size())
+                            {
+                                matchingButton.setVisibility( View.VISIBLE);
+                            }
+                        }
+                    });
                     return true;
                 }
             });
+            capoeiristasOfCurrentRound.get( index).setBackgroundColor( GRAY);
+            capoeiristasOfCurrentRound.get( index + 1).setBackgroundColor( GRAY);
             pairLayout.add( temp);
         }
 
@@ -171,7 +264,7 @@ public class Tournament extends AppCompatActivity {
             }
             rounds.get( currentRound).addView( pairLayout.get( i));
         }
-        allRoundsLl.addView( rounds.get( currentRound));
+        allRoundsLl.addView( rounds.get( currentRound), params);
         class buttonClick implements View.OnClickListener
         {
             @Override
@@ -182,7 +275,12 @@ public class Tournament extends AppCompatActivity {
                 numberOfClickedPair = 0;
                 titleNumber += 2;
 
-                ArrayList<TextView> capoeiristasOfCurrentRound = new ArrayList<TextView>();
+                final ArrayList<TextView> capoeiristasOfCurrentRound = new ArrayList<TextView>();
+                Collections.shuffle( capoeiristas);
+                final ArrayList<Capoeirista> tempCapoeiristas = new ArrayList<>();
+                for( int i = 0; i < capoeiristas.size(); i++) {
+                    tempCapoeiristas.add(new Capoeirista(capoeiristas.get(i).getName()));
+                }
                 for( int i = 0; i < capoeiristas.size(); i ++)
                 {
                     TextView view = new TextView( context);
@@ -204,20 +302,92 @@ public class Tournament extends AppCompatActivity {
                         parent.removeView(capoeiristasOfCurrentRound.get( i + 1));
                     temp.addView( capoeiristasOfCurrentRound.get( i), params);
                     temp.addView( capoeiristasOfCurrentRound.get( i + 1), params2);
+                    final int index = i;
                     temp.setOnTouchListener(new View.OnTouchListener() {
                         @Override
                         public boolean onTouch(View v, MotionEvent event) {
-                            // Bug var, birden çok tıklanırsa???
-                            //if( event.getAction() == MotionEvent.ACTION_BUTTON_PRESS)
-                            numberOfClickedPair ++;
-                            v.setBackgroundColor(GREEN);
-                            if( numberOfClickedPair == pairLayout.size())
+                            // Bug var, scroll yapıldığında basılmasın istiyorum ama alttaki satır çalışmıyo.
+                            if( event.getAction() != MotionEvent.ACTION_SCROLL)
                             {
-                                matchingButton.setVisibility( View.VISIBLE);
+                                // Bug var, birden çok tıklanırsa???
+                                cancelButton.setVisibility(View.VISIBLE);
+                                chooseButton.setVisibility(View.VISIBLE);
+                                firstCapoeiristaText.setVisibility(View.VISIBLE);
+                                secondCapoeiristaText.setVisibility(View.VISIBLE);
+                                infoText.setVisibility(View.VISIBLE);
+                                firstCapoeiristaText.setText( capoeiristasOfCurrentRound.get(index).getText());
+                                secondCapoeiristaText.setText( capoeiristasOfCurrentRound.get( index + 1).getText());
+
+                                firstCapoeiristaText.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        capoeiristasOfCurrentRound.get( index).setBackgroundColor( GREEN);
+                                        capoeiristasOfCurrentRound.get( index + 1).setBackgroundColor( RED);
+                                        controlSelectOfWinner = 1;
+                                    }
+                                });
+                                secondCapoeiristaText.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        capoeiristasOfCurrentRound.get( index).setBackgroundColor( RED);
+                                        capoeiristasOfCurrentRound.get( index + 1).setBackgroundColor( GREEN);
+                                        controlSelectOfWinner = 2;
+                                    }
+                                });
+                                cancelButton.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        cancelButton.setVisibility(View.INVISIBLE);
+                                        chooseButton.setVisibility(View.INVISIBLE);
+                                        firstCapoeiristaText.setVisibility(View.INVISIBLE);
+                                        secondCapoeiristaText.setVisibility(View.INVISIBLE);
+                                        infoText.setVisibility(View.INVISIBLE);
+                                    }
+                                });
+                                chooseButton.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        cancelButton.setVisibility(View.INVISIBLE);
+                                        chooseButton.setVisibility(View.INVISIBLE);
+                                        firstCapoeiristaText.setVisibility(View.INVISIBLE);
+                                        secondCapoeiristaText.setVisibility(View.INVISIBLE);
+                                        infoText.setVisibility(View.INVISIBLE);
+                                        if( controlSelectOfWinner == 1)
+                                        {
+                                            capoeiristasOfCurrentRound.get( index).setBackgroundColor( GREEN);
+                                            capoeiristasOfCurrentRound.get( index + 1).setBackgroundColor( RED);
+                                            String firstCapo = tempCapoeiristas.get(index).getName();
+                                            String secondCapo = tempCapoeiristas.get(index + 1).getName();
+                                            if( doesExist( capoeiristas, secondCapo))
+                                                removeCapoeirista(capoeiristas, secondCapo);
+                                            if( !doesExist( capoeiristas, firstCapo))
+                                                addCapoeirista( capoeiristas, firstCapo);
+                                        }
+                                        else
+                                        {
+                                            capoeiristasOfCurrentRound.get( index).setBackgroundColor( RED);
+                                            capoeiristasOfCurrentRound.get( index + 1).setBackgroundColor( GREEN);
+                                            String firstCapo = tempCapoeiristas.get(index).getName();
+                                            String secondCapo = tempCapoeiristas.get(index + 1).getName();
+                                            if( doesExist( capoeiristas, firstCapo))
+                                                removeCapoeirista(capoeiristas, firstCapo);
+                                            if( !doesExist( capoeiristas, secondCapo))
+                                                addCapoeirista( capoeiristas, secondCapo);
+                                        }
+                                        numberOfClickedPair ++;
+                                        if( numberOfClickedPair == pairLayout.size())
+                                        {
+                                            matchingButton.setVisibility( View.VISIBLE);
+                                        }
+                                    }
+                                });
+                                return true;
                             }
-                            return true;
+                            return false;
                         }
                     });
+                    capoeiristasOfCurrentRound.get( index).setBackgroundColor( GRAY);
+                    capoeiristasOfCurrentRound.get( index + 1).setBackgroundColor( GRAY);
                     pairLayout.add( temp);
                 }
                 for( int i = 0; i < pairLayout.size(); i ++)
@@ -233,7 +403,7 @@ public class Tournament extends AppCompatActivity {
                     }
                     rounds.get( currentRound).addView( pairLayout.get( i));
                 }
-                allRoundsLl.addView( rounds.get( currentRound));
+                allRoundsLl.addView( rounds.get( currentRound), params);
             }
         }
         matchingButton.setOnClickListener(new buttonClick());
@@ -257,6 +427,27 @@ public class Tournament extends AppCompatActivity {
             else
                 return 1 + calculateNumberOfRounds( size / 2);
         }
+    }
+    public void removeCapoeirista( ArrayList<Capoeirista> list, String name)
+    {
+        for( int i = 0; i < list.size(); i ++)
+        {
+            if( list.get(i).getName().equals( name))
+                list.remove(i);
+        }
+    }
+    public boolean doesExist( ArrayList<Capoeirista> list, String name)
+    {
+        for( int i = 0; i < list.size(); i ++)
+        {
+            if( list.get(i).getName().equals( name))
+                return true;
+        }
+        return false;
+    }
+    public void addCapoeirista( ArrayList<Capoeirista> list, String name)
+    {
+        list.add( new Capoeirista(name));
     }
 
     public void addTextViewIntoLinearLayout( LinearLayout layout, String text)

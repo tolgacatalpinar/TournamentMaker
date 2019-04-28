@@ -6,14 +6,20 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <LinearLayout
-        android:orientation="horizontal"
-        android:id="@+id/allRoundsLl"
+    <ScrollView
+        android:id="@+id/scrollView2"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <LinearLayout
+            android:id="@+id/allRoundsLl"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"></LinearLayout>
+    </ScrollView>
 
-    </LinearLayout>
+
+
 
     <Button
         android:id="@+id/matchingButton"
@@ -31,5 +37,63 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.923" />
+
+    <TextView
+        android:id="@+id/infoText"
+        android:layout_width="150dp"
+        android:layout_height="30dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="9dp"
+        android:background="@color/blue"
+        android:text="Kazananı Seç"
+        android:textAlignment="center"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/matchingButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.559"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/scrollView2"
+        app:layout_constraintVertical_bias="0.41"
+        tools:text="Kazananı Seç" />
+
+    <TextView
+        android:id="@+id/firstCapoeiristaText"
+        android:layout_width="150dp"
+        android:layout_height="30dp"
+        android:text="TextView"
+        android:background="@color/blue"
+        app:layout_constraintEnd_toEndOf="@+id/infoText"
+        app:layout_constraintStart_toStartOf="@+id/infoText"
+        app:layout_constraintTop_toBottomOf="@+id/infoText" />
+
+    <TextView
+        android:id="@+id/secondCapoeiristaText"
+        android:layout_width="150dp"
+        android:layout_height="30dp"
+        android:text="TextView"
+        android:background="@color/blue"
+        app:layout_constraintStart_toStartOf="@+id/firstCapoeiristaText"
+        app:layout_constraintTop_toBottomOf="@+id/firstCapoeiristaText" />
+
+    <Button
+        android:id="@+id/cancelButton"
+        android:layout_width="75dp"
+        android:layout_height="40dp"
+        android:text="X"
+        android:background="@color/blue"
+        app:layout_constraintStart_toStartOf="@+id/secondCapoeiristaText"
+        app:layout_constraintTop_toBottomOf="@+id/secondCapoeiristaText"
+        tools:text="X" />
+
+    <Button
+        android:id="@+id/chooseButton"
+        android:layout_width="75dp"
+        android:layout_height="40dp"
+        android:text="SEÇ"
+        android:background="@color/blue"
+        app:layout_constraintStart_toEndOf="@+id/cancelButton"
+        app:layout_constraintTop_toTopOf="@+id/cancelButton"
+        tools:text="SEÇ" />
 
 </android.support.constraint.ConstraintLayout>
