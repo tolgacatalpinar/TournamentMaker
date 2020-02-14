@@ -15,8 +15,8 @@ last empty seat. The matchings continue until there is one winner. The language 
 <img src="Screenshots/AddParticipants3.jpg" width="200">
 
 # Tournament
-<img src="Screenshots/Tournament.jpg" width="200">
-<img src="Screenshots/Tournament2.jpg" width="200">
-<img src="Screenshots/Tournament3.jpg" width="200">
-<img src="Screenshots/Tournament4.jpg" width="200">
-<img src="Screenshots/Tournament5.jpg" width="200">
+<img src="Screenshots/Tournament.jpg" width="400">
+<img src="Screenshots/Tournament2.jpg" width="400">
+<img src="Screenshots/Tournament3.jpg" width="400">
+<img src="Screenshots/Tournament4.jpg" width="400">
+<img src="Screenshots/Tournament5.jpg" width="400">
